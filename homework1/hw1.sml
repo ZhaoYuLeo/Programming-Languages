@@ -92,6 +92,3 @@ fun oldest(dates : (int * int * int) list) =
 	    SOME (oldest_dates(dates))
 	end
 
-
-fun 
-	    
