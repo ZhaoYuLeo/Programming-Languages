@@ -92,3 +92,29 @@ fun oldest(dates : (int * int * int) list) =
 	    SOME (oldest_dates(dates))
 	end
 
+(* fun sort(xs : int list) = *) 
+
+
+fun member(x : int, xs : int list) =
+    if null xs
+    then false
+    else
+	if x = hd xs
+	then true
+	else member(x, tl xs)
+
+		   
+fun remove_duplicates(xs : int list) =
+    if null xs
+    then []
+    else
+	let val tl_ans = remove_duplicates(tl xs)
+	in
+	    if member(hd xs, tl_ans)
+	    then tl_ans
+	    else (hd xs :: tl_ans)
+	end
+
+	    
+fun number_in_months_challenge(dates : (int * int * int) list, months : int list) =
+    number_in_months(dates, remove_duplicates months)
