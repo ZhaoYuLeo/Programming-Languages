@@ -115,6 +115,10 @@ fun remove_duplicates(xs : int list) =
 	    else (hd xs :: tl_ans)
 	end
 
-	    
+(* so easy to change the function behavior *)
 fun number_in_months_challenge(dates : (int * int * int) list, months : int list) =
     number_in_months(dates, remove_duplicates months)
+
+
+fun dates_in_months_challenge(dates : (int * int * int) list, months : int list) =
+    dates_in_months(dates, remove_duplicates months)    
