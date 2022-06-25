@@ -5,7 +5,7 @@
 
 val test11 = all_except_option ("string", ["string"]) = SOME []
 val test12 = all_except_option ("string", ["string", "callee", "hybird"]) = SOME ["callee","hybird"]
-val test13 = all_except_option ("string", ["digression", "string", "callee", "hybird"]) = SOME ["digression","callee","hybird"]
-val test14 = all_except_option ("string", ["digression", "string"]) = SOME ["digression"]
+val test13 = all_except_option ("string", ["digression", "celery", "string", "callee", "hybird"]) = SOME ["digression","celery","callee","hybird"]
+val test14 = all_except_option ("string", ["digression", "celery", "string"]) = SOME ["digression","celery"]
 val test15 = all_except_option ("string", ["digression", "hybird"]) = NONE
 
