@@ -29,6 +29,13 @@ fun all_except_option_op(except_str, str_list) =
 			   else except(lst', acc @ [s])
     in except(str_list, [])
     end
+
+fun get_substitutions1(substitutions, name) =
+    case substitutions of
+	[] => []
+      | group::groups => case all_except_option(name, group) of
+			     NONE => get_substitutions1(groups, name) 
+			  | SOME lst => lst @ get_substitutions1(groups, name)
 	
 (* you may assume that Num is always used with values 2, 3, ..., 10
    though it will not really come up *)
