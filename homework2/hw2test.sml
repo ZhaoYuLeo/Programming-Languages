@@ -9,3 +9,10 @@ val test13 = all_except_option ("string", ["digression", "celery", "string", "ca
 val test14 = all_except_option ("string", ["digression", "celery", "string"]) = SOME ["digression","celery"]
 val test15 = all_except_option ("string", ["digression", "hybird"]) = NONE
 
+val test21 = get_substitutions1 ([["foo"],["there"]], "foo") = []
+val test22 = get_substitutions1 ([[],["there"]], "foo") = []
+val test23 = get_substitutions1 ([[]], "foo") = []
+val test24 = get_substitutions1 ([["there","Fred","foo","Betty","Freddie"]], "foo") = ["there","Fred","Betty","Freddie"]
+val test25 = get_substitutions1 ([["Fred","Fredrick"],["Elizabeth","Betty"],["Freddie","Fred","F"]],"Fred") = ["Fredrick","Freddie","F"]
+														 
+								  
