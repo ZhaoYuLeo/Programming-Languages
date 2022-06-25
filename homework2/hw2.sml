@@ -35,7 +35,17 @@ fun get_substitutions1(substitutions, name) =
 	[] => []
       | group::groups => case all_except_option(name, group) of
 			     NONE => get_substitutions1(groups, name) 
-			  | SOME lst => lst @ get_substitutions1(groups, name)
+			   | SOME lst => lst @ get_substitutions1(groups, name)
+
+fun get_substitutions2(substitutions, name) =
+    let fun aux(subs, acc)=
+	    case subs of
+		[] => acc
+	      | sub::subs' => case all_except_option(name, sub) of
+				     NONE => aux(subs', acc)
+				   | SOME lst => aux(subs', acc @ lst)
+    in aux(substitutions, [])
+    end
 	
 (* you may assume that Num is always used with values 2, 3, ..., 10
    though it will not really come up *)
