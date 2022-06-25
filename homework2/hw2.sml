@@ -19,20 +19,17 @@ fun all_except_option(except_str, str_list) =
 				   NONE => NONE
 				 | SOME lst => SOME(str::lst)
 
+(* append is too expensive. won't perform better  *)
 fun all_except_option_op(except_str, str_list) =
     let fun except(lst, acc) =
 	    case lst of
 		[] => NONE
 	      | s::lst' => if same_string(except_str, s)
-			   then case acc of
-				    SOME stl => SOME (stl @ lst')
-				 |  NONE => SOME lst'
-			   else case acc of
-				    SOME stl => except(lst', SOME (stl @ [s]))
-				  | NONE => NONE
-    in except(str_list, SOME [])
-    end						   
-
+			   then SOME (acc @ lst')
+			   else except(lst', acc @ [s])
+    in except(str_list, [])
+    end
+	
 (* you may assume that Num is always used with values 2, 3, ..., 10
    though it will not really come up *)
 datatype suit = Clubs | Diamonds | Hearts | Spades
