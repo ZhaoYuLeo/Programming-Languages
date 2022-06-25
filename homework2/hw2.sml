@@ -18,6 +18,28 @@ fun all_except_option(except_str, str_list) =
 			  else case  all_except_option(except_str, str_list') of
 				   NONE => NONE
 				 | SOME lst => SOME(str::lst)
+
+fun sumup(int_list) =
+    let fun sum(xs, acc) =
+	    case xs of
+		[] => acc
+	      | x::xs' => sum(xs', acc+x)
+    in sum(int_list, 0)
+    end
+
+fun all_except_option_op(except_str, str_list) =
+    let fun except(lst, acc) =
+	    case lst of
+		[] => NONE
+	      | s::lst' => if same_string(except_str, s)
+			   then case acc of
+				    SOME stl => SOME (stl @ lst')
+				 |  NONE => SOME lst'
+			   else case acc of
+				    SOME stl => except(lst', SOME (s::stl))
+				  | NONE => NONE
+    in except(str_list, SOME [])
+    end
 	     
 (* you may assume that Num is always used with values 2, 3, ..., 10
    though it will not really come up *)
