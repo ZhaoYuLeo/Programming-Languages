@@ -27,3 +27,8 @@ val test41 = similar_names ([["Fred","Fredrick"],["Elizabeth","Betty"],["Freddie
 val test42 = similar_names ([[]], {first="Fred", last="Smith", middle="W"}) = [{first="Fred",last="Smith",middle="W"}]
 val test43 = similar_names ([], {first="Fred", middle=889, last=56}) = [{first="Fred",last=56,middle=889}]
 
+val test51 = card_color (Clubs, Num 2) = Black
+val test52 = card_color (Diamonds, King) = Red 
+val test53 = card_color (Hearts, Jack) = Red
+val test54 = card_color (Spades, Ace) = Black
+val test55 = card_color (Clubs, Num 8) = Black 
