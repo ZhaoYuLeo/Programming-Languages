@@ -97,3 +97,12 @@ fun sum_cards (cards_list) =
 	      | c::cs' => sum_value(cs', acc + card_value(c))
     in sum_value(cards_list, 0)
     end
+
+fun score (cards_list, goal) =
+    let val sum = sum_cards(cards_list)
+	val preliminary_score = if sum > goal then 3 * (sum - goal) else goal - sum
+    in if all_same_color(cards_list)
+       then preliminary_score div 2
+       else preliminary_score
+    end
+    
