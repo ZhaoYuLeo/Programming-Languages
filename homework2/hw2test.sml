@@ -21,3 +21,9 @@ val test33 = get_substitutions2 ([[]], "foo") = []
 val test34 = get_substitutions2 ([["there","Fred","foo","Betty","Freddie"]], "foo") = ["there","Fred","Betty","Freddie"]
 val test35 = get_substitutions2 ([["Fred","Fredrick"],["Elizabeth","Betty"],["Freddie","Fred","F"]],"Fred") = ["Fredrick","Freddie","F"]
 						  
+val test41 = similar_names ([["Fred","Fredrick"],["Elizabeth","Betty"],["Freddie","Fred","F"]], {first="Fred", middle="W", last="Smith"}) =
+	    [{first="Fred", last="Smith", middle="W"}, {first="Fredrick", last="Smith", middle="W"},
+	     {first="Freddie", last="Smith", middle="W"}, {first="F", last="Smith", middle="W"}]
+val test42 = similar_names ([[]], {first="Fred", last="Smith", middle="W"}) = [{first="Fred",last="Smith",middle="W"}]
+val test43 = similar_names ([], {first="Fred", middle=889, last=56}) = [{first="Fred",last=56,middle=889}]
+
