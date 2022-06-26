@@ -70,3 +70,10 @@ exception IllegalMove
 fun card_color (Spades, _) = Black
   | card_color (Clubs, _) = Black
   | card_color _ = Red
+
+fun card_value (one_card) =
+    case one_card of
+	(_, Num i) => i
+      | (_, Ace) => 11
+      | _ => 10
+
