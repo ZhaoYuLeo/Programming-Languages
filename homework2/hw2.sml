@@ -66,3 +66,7 @@ datatype move = Discard of card | Draw
 exception IllegalMove
 
 (* put your solutions for problem 2 here *)
+ 
+fun card_color (Spades, _) = Black
+  | card_color (Clubs, _) = Black
+  | card_color _ = Red
