@@ -84,3 +84,9 @@ fun remove_card (cs, c, e) =
 		   then cs'
 		   else sc::remove_card(cs', c, e)
     
+fun all_same_color (cards_list) =
+    case cards_list of
+	[] => true
+      | x::[] => true
+      | x::y::clt' => card_color(x) = card_color(y) andalso all_same_color(y::clt')
+				 
