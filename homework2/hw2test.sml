@@ -55,3 +55,10 @@ val test92 = sum_cards [(Clubs, Ace),(Spades, King)] = 21
 val test93 = sum_cards [(Clubs, Ace)] = 11 
 val test94 = sum_cards [(Clubs, Ace),(Spades, King),(Diamonds, Num 6)] = 27 
 val test95 = sum_cards [] = 0
+
+val test101 = score ([(Hearts, Num 2),(Clubs, Num 4)],10) = 4
+val test102 = score ([],10) = 5
+val test103 = score ([(Hearts, Ace),(Clubs, Num 4)],6) = 27
+val test104 = score ([(Hearts, Ace),(Diamonds, Num 4)],6) = 13
+val test105 = score ([(Hearts, Num 2),(Diamonds, Num 4)],10) = 2
+
