@@ -31,4 +31,11 @@ val test51 = card_color (Clubs, Num 2) = Black
 val test52 = card_color (Diamonds, King) = Red 
 val test53 = card_color (Hearts, Jack) = Red
 val test54 = card_color (Spades, Ace) = Black
-val test55 = card_color (Clubs, Num 8) = Black 
+val test55 = card_color (Clubs, Num 8) = Black
+
+val test61 = card_value (Clubs, Num 2) = 2
+val test62 = card_value (Hearts, Num 9) = 9
+val test63 = card_value (Diamonds, Ace) = 11
+val test64 = card_value (Diamonds, King) = 10
+val test65 = card_value (Spades, Jack) = 10
+
