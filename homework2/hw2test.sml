@@ -14,5 +14,10 @@ val test22 = get_substitutions1 ([[],["there"]], "foo") = []
 val test23 = get_substitutions1 ([[]], "foo") = []
 val test24 = get_substitutions1 ([["there","Fred","foo","Betty","Freddie"]], "foo") = ["there","Fred","Betty","Freddie"]
 val test25 = get_substitutions1 ([["Fred","Fredrick"],["Elizabeth","Betty"],["Freddie","Fred","F"]],"Fred") = ["Fredrick","Freddie","F"]
-														 
-								  
+
+val test31 = get_substitutions2 ([["foo"],["there"]], "foo") = []
+val test32 = get_substitutions2 ([[],["there"]], "foo") = []
+val test33 = get_substitutions2 ([[]], "foo") = []
+val test34 = get_substitutions2 ([["there","Fred","foo","Betty","Freddie"]], "foo") = ["there","Fred","Betty","Freddie"]
+val test35 = get_substitutions2 ([["Fred","Fredrick"],["Elizabeth","Betty"],["Freddie","Fred","F"]],"Fred") = ["Fredrick","Freddie","F"]
+						  
