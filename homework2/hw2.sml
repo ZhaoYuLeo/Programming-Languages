@@ -90,3 +90,10 @@ fun all_same_color (cards_list) =
       | x::[] => true
       | x::y::clt' => card_color(x) = card_color(y) andalso all_same_color(y::clt')
 				 
+fun sum_cards (cards_list) =
+    let fun sum_value(cs, acc) =
+	    case cs of
+		[] => acc
+	      | c::cs' => sum_value(cs', acc + card_value(c))
+    in sum_value(cards_list, 0)
+    end
