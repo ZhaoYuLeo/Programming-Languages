@@ -38,7 +38,7 @@ fun get_substitutions1(substitutions, name) =
 			   | SOME lst => lst @ get_substitutions1(groups, name)
 
 fun get_substitutions2(substitutions, name) =
-    let fun aux(subs, acc)=
+    let fun aux(subs, acc) =
 	    case subs of
 		[] => acc
 	      | sub::subs' => case all_except_option(name, sub) of
@@ -46,7 +46,14 @@ fun get_substitutions2(substitutions, name) =
 				   | SOME lst => aux(subs', acc @ lst)
     in aux(substitutions, [])
     end
-	
+
+(* when i use tail recursion and append, the order is not right *)
+fun similar_names(substitutions, {first=first_name, middle=m, last=l}) =
+    let fun aux ([]) = []
+	  | aux (n::names') = {first=n, last=l, middle=m}::aux(names')
+    in aux(first_name::get_substitutions2(substitutions, first_name))
+    end
+
 (* you may assume that Num is always used with values 2, 3, ..., 10
    though it will not really come up *)
 datatype suit = Clubs | Diamonds | Hearts | Spades
