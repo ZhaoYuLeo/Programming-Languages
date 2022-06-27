@@ -119,3 +119,20 @@ fun officiate (card_list, move_list, goal) =
     in cur_state(card_list, [], move_list, 0)
     end
 	
+fun score_challenge (card_list, goal) =
+    let fun ace_count (cs, num) =
+	    case cs of
+		[] => num
+	      | (_, Ace)::cs' => ace_count(cs', num + 1)
+	      | _::cs' => ace_count(cs', num)
+	val sum = sum_cards(card_list)
+	val ace_num = ace_count(card_list, 0)
+	val preliminary_score = if (sum - ace_num * 10) > goal
+				then 3 * (sum - ace_num * 10 - goal)
+				else if sum < goal
+				then goal - sum
+				else 0
+    in if all_same_color(card_list)
+       then preliminary_score div 2
+       else preliminary_score
+    end
