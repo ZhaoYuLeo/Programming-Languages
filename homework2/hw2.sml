@@ -106,3 +106,16 @@ fun score (cards_list, goal) =
        else preliminary_score
     end
     
+fun officiate (card_list, move_list, goal) =
+    let fun cur_state (cur_cards, held_cards, cur_moves, cur_score) =
+	    case cur_moves of
+		[] => cur_score
+	      | Discard card::cm' => cur_state(cur_cards, remove_card(held_cards, card, IllegalMove), cm', score(held_cards, goal))
+	      | Draw::cm' => case cur_cards of
+				 [] => cur_score
+			       | c::cl' => if cur_score > goal
+					   then cur_score
+					   else cur_state(cl', c::held_cards, cm', score(c::held_cards, goal))	      
+    in cur_state(card_list, [], move_list, 0)
+    end
+	
