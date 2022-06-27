@@ -62,3 +62,16 @@ val test103 = score ([(Hearts, Ace),(Clubs, Num 4)],6) = 27
 val test104 = score ([(Hearts, Ace),(Diamonds, Num 4)],6) = 13
 val test105 = score ([(Hearts, Num 2),(Diamonds, Num 4)],10) = 2
 
+val test111 = officiate ([(Hearts, Num 2),(Clubs, Num 4)],[Draw], 15) = 6
+
+val test121 = officiate ([(Clubs,Ace),(Spades,Ace),(Clubs,Ace),(Spades,Ace)],
+                        [Draw,Draw,Draw,Draw,Draw],
+                        42)
+             = 3
+
+val test131 = ((officiate([(Clubs,Jack),(Spades,Num(8))],
+                         [Draw,Discard(Hearts,Jack)],
+                         42);
+               false) 
+              handle IllegalMove => true)
+             
