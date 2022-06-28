@@ -113,11 +113,12 @@ fun officiate (card_list, move_list, goal) =
 	      | Discard card::cm' => cur_state(cur_cards, remove_card(held_cards, card, IllegalMove), cm', score(held_cards, goal))
 	      | Draw::cm' => case cur_cards of
 				 [] => cur_score
-			       | c::cl' => if cur_score > goal
+			       | c::cl' => if sum_cards(held_cards) > goal
 					   then cur_score
 					   else cur_state(cl', c::held_cards, cm', score(c::held_cards, goal))	      
     in cur_state(card_list, [], move_list, 0)
     end
+
 	
 fun score_challenge (card_list, goal) =
     let fun ace_count (cs, num) =
