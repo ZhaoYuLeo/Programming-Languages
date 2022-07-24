@@ -122,24 +122,29 @@ fun score (cards_list, goal) =
     end
 
 (* Problem2 g : takes the card-list, a move list, and the goal and returns the score at the end of this game after processing the moves in the move list on order.  *)
-fun officiate (card_list, move_list, goal) =
-    let fun cur_state (cur_cards, held_cards, cur_moves, cur_score) =
-	    case cur_moves of
-		[] => cur_score
-	      | Discard card::cm' => cur_state(cur_cards, remove_card(held_cards, card, IllegalMove), cm', score(held_cards, goal))
-	      | Draw::cm' => case cur_cards of
-				 [] => cur_score
-			       | c::cl' => if sum_cards(held_cards) > goal
-					   then cur_score
-					   else cur_state(cl', c::held_cards, cm', score(c::held_cards, goal))	      
-    in cur_state(card_list, [], move_list, 0)
+
+fun process(cards, moves, held_cards, goal, score_fun, sum_cards_fun) =
+    let fun helper(cards, moves, held_cards) =
+	    case moves of
+		[] => score_fun(held_cards, goal)
+	      | (Discard card)::moves' => helper(cards, moves', remove_card(held_cards, card, IllegalMove))
+	      | Draw::moves' => case cards of
+				    [] => score_fun(held_cards, goal)
+				  | card::cards' => if sum_cards_fun(card::held_cards) > goal
+						    then score_fun(card::held_cards, goal)
+						    else helper(cards', moves', card::held_cards)
+    in helper(cards, moves, held_cards)
     end
+
+
+fun officiate (card_list, move_list, goal) = process(card_list, move_list, [], goal, score, sum_cards)
+
 
 
 (* Problem3 a : same behavior except each ace can have a value of 1 or 11 and score_challenger should always return the least (i.e., best) possible score. (Note the game-ends-if-sum-exceeds-goal rule should apply only if there is no sum that is less than or equal to the goal.) *)
 
 (* returns the number of Ace in cards list  *)
-fun count_ace(cards_list) =
+fun count_ace (cards_list) =
     let fun aux(cards_list, acc) =
 	    case cards_list of
 		[] => acc
@@ -149,9 +154,10 @@ fun count_ace(cards_list) =
     end
 
 (* takes the sum of values of the held-cards and the goal returns the preliminary score *)
-fun preliminary_score(sum, goal) = if sum > goal then 3 * (sum - goal) else goal - sum
+fun preliminary_score (sum, goal) = if sum > goal then 3 * (sum - goal) else goal - sum
 
-										       
+
+(* always returns the least possible score. *)
 fun score_challenge (cards_list, goal) =
     (* try all possible preliminary scores and choose the least one. *)
     let val sum = sum_cards(cards_list)
@@ -160,7 +166,7 @@ fun score_challenge (cards_list, goal) =
 	    if ace_num = 0
 	    then least
 	    else 
-		let val pre_score =  preliminary_score(sum, goal)
+ 		let val pre_score =  preliminary_score(sum, goal)
 		in if pre_score < least
 		   then least_pre_score(sum - 10, ace_num - 1, pre_score)
 		   else least_pre_score(sum - 10, ace_num - 1, least)
@@ -170,3 +176,9 @@ fun score_challenge (cards_list, goal) =
        else least_pre_score(sum - 10, ace_num, preliminary_score(sum, goal))
     end
 
+(* the game-ends-if-sum-exceeds-goal rule should apply only if there is no sum that is less than or equal to the goal.  *)
+fun least_sum_cards (cards_list) = sum_cards(cards_list) - 10 * count_ace(cards_list)
+
+
+(* same process but different ways to caculate sum of cards and score. *)
+fun officiate_challenge (card_list, move_list, goal ) = process(card_list, move_list, [], goal, score_challenge, least_sum_cards)
