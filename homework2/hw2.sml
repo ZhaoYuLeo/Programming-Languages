@@ -180,5 +180,43 @@ fun score_challenge (cards_list, goal) =
 fun least_sum_cards (cards_list) = sum_cards(cards_list) - 10 * count_ace(cards_list)
 
 
-(* same process but different ways to caculate sum of cards and score. *)
+(* same process but different ways to caculate the sum of cards and score. *)
 fun officiate_challenge (card_list, move_list, goal ) = process(card_list, move_list, [], goal, score_challenge, least_sum_cards)
+
+
+(* Problem3 b : takes a card-list and a goal and returns a move-list. *)
+(* finds the first card which has the same value as given value in the held-cards. *)
+fun find_card_by_value (card_list, value) =
+    let fun helper (card_list) =
+	    case card_list of
+		[] => NONE
+	      | card::cards' => if card_value(card) = value
+				then SOME card
+				else helper(cards')
+    in helper(card_list)
+    end
+
+
+(* order confuses me a lot. the first step pushed into move_list should be the first one comes out when execute. *)
+fun careful_player (card_list, goal) =
+    let fun helper (cards, held_cards) =
+	    case cards of
+		(* since i have no card to draw and the sum of held-cards is less than goal(draw follows discard stopped in previous step), i cannot reach the 0 score. time to give up. *)
+		[] => []
+	      | card::cards' =>
+		let val sum = sum_cards(held_cards)
+		    val sum_predict = sum_cards(card::held_cards)
+		    val gap_predict = sum_predict - goal
+		    val card_search = find_card_by_value(held_cards, gap_predict)
+		in if sum = goal
+		   then []
+		   else if goal > 10 + sum
+		   then Draw::helper(cards', card::held_cards)
+		   else case card_search of
+			    SOME card => (Discard card)::Draw::[]
+			  | NONE => if gap_predict > 0
+				    then [] (* maybe you have one card larger to discard, but i just give up. *)
+				    else Draw::helper(cards', card::held_cards)
+		end
+    in helper(card_list, [])
+    end
