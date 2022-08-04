@@ -16,8 +16,14 @@ val test32 = longest_string2 [] = ""
 val test33 = longest_string2 ["map", "why", "partial"] = "partial"
 
 val test4a = longest_string3 ["A","bc","C"] = "bc"
+val test4a1 = longest_string3 ["Ac","bc","Cc"] = "Ac"
+val test4a2 = longest_string3 [] = ""
+val test4a3 = longest_string3 ["map", "why", "partial"] = "partial"
 
 val test4b = longest_string4 ["A","B","C"] = "C"
+val test4b1 = longest_string4 ["Ac","bc","Cc"] = "Cc"
+val test4b2 = longest_string4 [] = ""
+val test4b3 = longest_string4 ["map", "why", "partial"] = "partial"
 
 val test5 = longest_capitalized ["A","bc","C"] = "A"
 
