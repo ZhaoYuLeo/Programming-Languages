@@ -10,7 +10,10 @@ val test21 = longest_string1 ["Ac","bc","Cc"] = "Ac"
 val test22 = longest_string1 [] = ""
 val test23 = longest_string1 ["map", "why", "partial"] = "partial"
 
-val test3 = longest_string2 ["A","bc","C"] = "bc"
+val test30 = longest_string2 ["A","bc","C"] = "bc"
+val test31 = longest_string2 ["Ac","bc","Cc"] = "Cc"
+val test32 = longest_string2 [] = ""
+val test33 = longest_string2 ["map", "why", "partial"] = "partial"
 
 val test4a = longest_string3 ["A","bc","C"] = "bc"
 
