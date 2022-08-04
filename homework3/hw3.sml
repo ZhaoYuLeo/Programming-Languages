@@ -39,3 +39,7 @@ datatype typ = Anything
 (* Problem1 : takes a string list and returns a string list that has only the strings in the argument that start with an uppercase letter *)
 fun only_capitals str_list =
     List.filter (fn str => Char.isUpper(String.sub(str, 0))) str_list
+
+(* Problem2 : takes a string list and returns the longest string in the list. returns "" when the list is empty. In the case of a tie, return the sstring closest to the beginning of the list. *)
+fun longest_string1 str_list =
+    foldl (fn (str, max) => if String.size(str) > String.size(max) then str else max) "" str_list
