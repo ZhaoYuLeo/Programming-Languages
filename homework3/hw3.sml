@@ -47,3 +47,11 @@ fun longest_string1 str_list =
 (* Problem3 : exactly like longest_string1 except returns the string closest to the end of the list in the case of tie. *)
 fun longest_string2 str_list =
     foldl (fn (str, max) => if String.size(str) >= String.size(max) then str else max) "" str_list
+
+(* Problem4 : abstraction of ...1 and ...2  *)
+fun longest_string_helper f str_list =
+    foldl (fn (str, max) => if f(String.size(str), String.size(max)) then str else max) "" str_list
+
+val longest_string3 = longest_string_helper (fn (x, y) => x > y)
+
+val longest_string4 = longest_string_helper (fn (x, y) => x >= y)
