@@ -43,3 +43,7 @@ fun only_capitals str_list =
 (* Problem2 : takes a string list and returns the longest string in the list. returns "" when the list is empty. In the case of a tie, return the sstring closest to the beginning of the list. *)
 fun longest_string1 str_list =
     foldl (fn (str, max) => if String.size(str) > String.size(max) then str else max) "" str_list
+
+(* Problem3 : exactly like longest_string1 except returns the string closest to the end of the list in the case of tie. *)
+fun longest_string2 str_list =
+    foldl (fn (str, max) => if String.size(str) >= String.size(max) then str else max) "" str_list
