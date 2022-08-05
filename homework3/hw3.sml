@@ -55,3 +55,9 @@ fun longest_string_helper f str_list =
 val longest_string3 = longest_string_helper (fn (x, y) => x > y)
 
 val longest_string4 = longest_string_helper (fn (x, y) => x >= y)
+
+(* Problem5 : takes a string list and returns the longest string in the list that begins with an uppercase letter, or "" if there are no such strings *)
+val longest_capitalized = longest_string3 o only_capitals
+    
+
+						   
