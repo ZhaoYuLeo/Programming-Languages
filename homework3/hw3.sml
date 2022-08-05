@@ -58,6 +58,6 @@ val longest_string4 = longest_string_helper (fn (x, y) => x >= y)
 
 (* Problem5 : takes a string list and returns the longest string in the list that begins with an uppercase letter, or "" if there are no such strings *)
 val longest_capitalized = longest_string3 o only_capitals
-    
 
-						   
+(* Problem6 : takes a string and returns the string that is the same characters in reverse order  *)
+val rev_string = String.implode o rev o String.explode
