@@ -61,3 +61,11 @@ val longest_capitalized = longest_string3 o only_capitals
 
 (* Problem6 : takes a string and returns the string that is the same characters in reverse order  *)
 val rev_string = String.implode o rev o String.explode
+
+(* Problem7 : takes a function and a list, both are curried and returns the first answer appling each element in the list to the function. Raise NoAnswer when the function returns None for all list elements. *)
+fun first_answer f xs =
+    case xs of
+	[] => raise NoAnswer
+      | x::xs' => case f x of
+		      NONE => first_answer f xs'
+		    | SOME v => v
