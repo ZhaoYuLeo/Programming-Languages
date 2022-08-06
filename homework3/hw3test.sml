@@ -48,6 +48,10 @@ val test9a1 = count_wildcards (Variable("a")) = 0
 val test9a2 = count_wildcards (TupleP[Variable("x"), Wildcard, ConstructorP("str", Wildcard), TupleP[Wildcard]]) = 3
 
 val test9b = count_wild_and_variable_lengths (Variable("a")) = 1
+val test9b1 = count_wild_and_variable_lengths (TupleP[Variable("x"), Variable("acent"), Wildcard, ConstructorP("str", Wildcard), TupleP[Wildcard]]) = 9
+val test9b2 = count_wild_and_variable_lengths (ConstructorP("strings", Wildcard)) = 1
+val test9b3 = count_wild_and_variable_lengths (Variable("about")) = 5
+
 
 val test9c = count_some_var ("x", Variable("x")) = 1
 
