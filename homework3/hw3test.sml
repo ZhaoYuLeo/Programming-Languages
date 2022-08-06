@@ -39,6 +39,9 @@ val test72 = (first_answer (fn x => if x > 3 then SOME x else NONE) []  handle N
 val test73 = first_answer (fn x => if x > 3 then SOME [x] else NONE) [1,2,3,4,5] = [4]
 
 val test8 = all_answers (fn x => if x = 1 then SOME [x] else NONE) [2,3,4,5,6,7] = NONE
+val test81 = all_answers (fn x => if x > 5 then SOME [x] else NONE) [2,3,4,5,6,7] = NONE
+val test82 = all_answers (fn x => if x > 1 then SOME [x] else NONE) [2,3,4,5,6,7] = SOME [2,3,4,5,6,7] 
+val test83 = all_answers (fn x => if x > 1 then SOME [x, 1] else NONE) [2,3,4] = SOME [2,1,3,1,4,1]
 
 val test9a = count_wildcards Wildcard = 1
 
