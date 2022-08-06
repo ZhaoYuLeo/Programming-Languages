@@ -59,6 +59,10 @@ val test9c2 = count_some_var ("summer", TupleP[Variable("summer"), Wildcard, Con
 val test9c3 = count_some_var ("strings", TupleP[Variable("summer"), Wildcard, ConstructorP("strings", Wildcard)]) = 0
 
 val test10 = check_pat (Variable("x")) = true
+val test101 = check_pat (TupleP[Variable("x"), Variable("x")]) = false
+val test102 = check_pat Wildcard = true
+val test103 = check_pat (TupleP[Variable("x"), Variable("acent"), Wildcard, ConstructorP("str",  Variable("str"))]) = true 
+
 
 val test11 = match (Const(1), UnitP) = NONE
 
