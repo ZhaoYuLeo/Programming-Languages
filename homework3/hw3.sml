@@ -90,7 +90,7 @@ fun all_answers f xs =
     end
 
 
-(* Problem9 *)
+(* Problem9 : *)
 (* takes a pattern and returns how many Wildcard patterns it contains *)
 val count_wildcards = g (fn x => 1) (fn x => 0)
 
@@ -99,3 +99,19 @@ val count_wild_and_variable_lengths = g (fn x => 1) (fn x => String.size(x))
 
 (* takes a string and a pattern (as a pair) and returns the number of times the string appears as a variable in the pattern *)
 fun count_some_var (str, p) = g (fn x => 0) (fn x => if x = str then 1 else 0) p
+
+
+(* Problem10 : takes a pattern and returns true if and only if all the variables appearing in the pattern are distinct from each other *)
+fun check_pat p =
+    let fun all_variables_strings p =
+	    case p of
+	    Variable x => [x]
+	  | TupleP ps => List.foldl (fn (p, acc) => (all_variables_strings p) @ acc) [] ps
+	  | ConstructorP(_,p) => all_variables_strings p
+	  | _ => []
+	fun strings_distinct str_list =
+	    case str_list of
+		[] => true
+	      | str::lst' => not( List.exists (fn x => x=str) lst') andalso strings_distinct lst'
+    in (strings_distinct o all_variables_strings) p
+    end
