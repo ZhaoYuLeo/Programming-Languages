@@ -54,6 +54,9 @@ val test9b3 = count_wild_and_variable_lengths (Variable("about")) = 5
 
 
 val test9c = count_some_var ("x", Variable("x")) = 1
+val test9c1 = count_some_var ("summer", Variable("summer")) = 1
+val test9c2 = count_some_var ("summer", TupleP[Variable("summer"), Wildcard, ConstructorP("strings", Wildcard)]) = 1
+val test9c3 = count_some_var ("strings", TupleP[Variable("summer"), Wildcard, ConstructorP("strings", Wildcard)]) = 0
 
 val test10 = check_pat (Variable("x")) = true
 
