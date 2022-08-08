@@ -2,6 +2,15 @@
 
 exception NoAnswer
 
+(* Inspired by the type definitions an ML implementation would use to implement pattern matching. Given valu v and pattern p, either p matches v or not. If it does, the match produces a list of string * valu pairs; order in the list does not matter. The rules for matching should be unsurprising:
+   1. Wildcard matches everything and produces the empty list of bindings.
+   2. Variable s matches any value v and produces the one-element list holding (s,v).
+   3. UnitP matches only Unit and produces the empty list of bindings.
+   4. ConstP 17 matches only Const 17 and produces the empty list of bindings (and similarly for other integers).
+   5. TupleP ps matches a value of the form Tuple vs if ps and vs have the same length and for all i, the ith element of ps matches the ith element of vs. The list of bindings produced is all the lists from the nested pattern matches appended together.
+   6. ConstructorP(s1,p) matches Constructor(s2,v) if s1 and s2 are the same string (you can compare them with =) and p matches v. The list of bindings produced is the list from the nested pattern match. We call the strings s1 and s2 the constructor name.
+   7. Nothing else matches.
+*)
 datatype pattern = Wildcard
 		 | Variable of string
 		 | UnitP
@@ -115,3 +124,15 @@ fun check_pat p =
 	      | str::lst' => not( List.exists (fn x => x=str) lst') andalso strings_distinct lst'
     in (strings_distinct o all_variables_strings) p
     end
+
+
+(* Problem11 : takes a valu * pattern and returns a (string * valu) list option, namely NONE if the pattern does not match and SOME lst where lst is the list of bindings if it does *)
+fun match (v, p) =
+    case (v, p) of
+	(_, Wildcard)        => SOME []		      
+      | (_, Variable s)      => SOME [(s, v)]
+      | (Unit, UnitP)        => SOME []
+      | (Const v_int, ConstP p_int)      => if v_int = p_int then SOME [] else NONE
+      | (Tuple v_lst, TupleP p_lst)      => if length v_lst = length p_lst then all_answers match (ListPair.zip(v_lst, p_lst)) else NONE (* no nested list since all elements in a list have same type *)
+      | (Constructor(vname, v'), ConstructorP(pname, p')) => if vname = pname then match(v', p') else NONE
+      | _ => NONE
