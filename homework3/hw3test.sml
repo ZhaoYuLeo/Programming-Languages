@@ -64,7 +64,21 @@ val test102 = check_pat Wildcard = true
 val test103 = check_pat (TupleP[Variable("x"), Variable("acent"), Wildcard, ConstructorP("str",  Variable("str"))]) = true 
 
 
-val test11 = match (Const(1), UnitP) = NONE
+val test110 = match (Const(1), UnitP) = NONE
+val test111 = match (Unit, UnitP) = SOME []
+val test112 = match (Const 17, Variable("account")) = SOME [("account",Const 17)]
+val test113 = match (Const 1, ConstP 17) = NONE
+val test114 = match (Tuple [Const 1, Unit], TupleP[Variable "account", Variable "name", Variable "nickname"]) = NONE
+val test115 = match (Tuple [Const 1, Constructor("sunny", Unit), Constructor("sun", Unit)], TupleP[Variable "account", Variable "name", Variable "nickname"]) = SOME  [("account",Const 1),("name",Constructor ("sunny",Unit)),("nickname",Constructor ("sun",Unit))] 
+val test116 = match (Constructor("sunny", Unit), ConstructorP("sun", UnitP)) = NONE
+val test117 = match (Constructor("sunny", Unit), ConstructorP("sunny", ConstP 1)) = NONE
+val test118 = match (Constructor("sunny", Const 17), ConstructorP("sunny", ConstP 1)) = NONE
+val test119 = match (Constructor("sunny", Const 1), ConstructorP("sunny", ConstP 1)) = SOME [] 
+val test1191 = match (Constructor("sunny", Const 1), ConstructorP("sunny", Variable "nickname")) =  SOME [("nickname",Const 1)] 
 
 val test12 = first_match Unit [UnitP] = SOME []
+val test121 = first_match Unit [ConstP 17] = NONE
+val test122 = first_match Unit [ConstP 17] = NONE
+val test123 = first_match Unit [UnitP, Variable("account"), ConstP 1] = SOME []
+val test124 = first_match Unit [Variable("account"), UnitP, ConstP 1] = SOME [("account",Unit)] 
 
