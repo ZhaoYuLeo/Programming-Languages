@@ -139,6 +139,4 @@ fun match (v, p) =
 
 
 (* Problem12 : takes a value and a list of patterns and returns a (string * valu) list option, namely NONE if no pattern in the list matches or SOME lst where lst is the list of bindings for the first pattern in the list that matches *)
-fun first_match v p_lst =
-    first_answer
-	() handle => 
+fun first_match v p_lst = SOME (first_answer (fn p => match (v, p)) p_lst) handle NoAnswer => NONE 
