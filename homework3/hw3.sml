@@ -136,3 +136,9 @@ fun match (v, p) =
       | (Tuple v_lst, TupleP p_lst)      => if length v_lst = length p_lst then all_answers match (ListPair.zip(v_lst, p_lst)) else NONE (* no nested list since all elements in a list have same type *)
       | (Constructor(vname, v'), ConstructorP(pname, p')) => if vname = pname then match(v', p') else NONE
       | _ => NONE
+
+
+(* Problem12 : takes a value and a list of patterns and returns a (string * valu) list option, namely NONE if no pattern in the list matches or SOME lst where lst is the list of bindings for the first pattern in the list that matches *)
+fun first_match v p_lst =
+    first_answer
+	() handle => 
