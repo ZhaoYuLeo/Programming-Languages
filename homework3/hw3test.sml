@@ -82,3 +82,7 @@ val test122 = first_match Unit [ConstP 17] = NONE
 val test123 = first_match Unit [UnitP, Variable("account"), ConstP 1] = SOME []
 val test124 = first_match Unit [Variable("account"), UnitP, ConstP 1] = SOME [("account",Unit)] 
 
+val test130 = typecheck_patterns ([], [ConstP 10, Variable "a"]) = SOME IntT
+val test131 = typecheck_patterns ([], [TupleP[Variable("x"), Variable("y")], TupleP[Wildcard, Wildcard]]) = SOME TupleT[Anything, Anything]
+val test132 = typecheck_patterns ([], [TupleP[Wildcard, Wildcard], TupleP[Wildcard, TupleP[Wildcard, Wildcard]]]) = SOME TupleT[Anything, TupleT[Anything, Anything]]
+
