@@ -82,7 +82,27 @@ val test122 = first_match Unit [ConstP 17] = NONE
 val test123 = first_match Unit [UnitP, Variable("account"), ConstP 1] = SOME []
 val test124 = first_match Unit [Variable("account"), UnitP, ConstP 1] = SOME [("account",Unit)] 
 
-val test130 = typecheck_patterns ([], [ConstP 10, Variable "a"]) = SOME IntT
-val test131 = typecheck_patterns ([], [TupleP[Variable("x"), Variable("y")], TupleP[Wildcard, Wildcard]]) = SOME TupleT[Anything, Anything]
-val test132 = typecheck_patterns ([], [TupleP[Wildcard, Wildcard], TupleP[Wildcard, TupleP[Wildcard, Wildcard]]]) = SOME TupleT[Anything, TupleT[Anything, Anything]]
+val typecheck_patterns_0 = typecheck_patterns ([], []) = NONE
+
+val typecheck_patterns_1 = typecheck_patterns ([], [TupleP[Variable("x"), Variable("y")], TupleP[Wildcard, Wildcard]]) = SOME TupleT[Anything, Anything]
+
+val typecheck_patterns_2 = typecheck_patterns ([], [TupleP[Wildcard, Wildcard], TupleP[Wildcard, TupleP[Wildcard, Wildcard]]]) = SOME TupleT[Anything, TupleT[Anything, Anything]]
+
+val typecheck_patterns_3 = typecheck_patterns ([], [ConstP 10, Wildcard, ConstP 17, Variable "a"]) = SOME IntT
+
+val typecheck_patterns_4 = typecheck_patterns ([], [ConstP 10, Wildcard, UnitP, Variable "a"]) = NONE 
+
+val typecheck_patterns_5 = typecheck_patterns ([], [UnitP, Wildcard, Variable "a"]) = SOME UnitT 
+
+val typecheck_patterns_6 = typecheck_patterns ([], [TupleP[Wildcard], TupleP[Wildcard, Wildcard]]) = NONE 
+
+val typecheck_patterns_7 = typecheck_patterns ([], [TupleP[ConstP 1], TupleP[UnitP]]) = NONE 
+
+val typecheck_patterns_8 = typecheck_patterns ([], [ConstructorP("n", Variable "a")]) = NONE 
+
+val typecheck_patterns_9 = typecheck_patterns ([("n", "t", TupleT[IntT, Anything])], [ConstructorP("n", Variable "a")]) = NONE 
+
+val typecheck_patterns_10 = typecheck_patterns ([("n", "t", TupleT[IntT, Anything])], [ConstructorP("n", TupleP[ConstP 1, Variable "a"])]) = SOME (Datatype "t")
+
+
 
