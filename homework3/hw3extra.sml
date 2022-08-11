@@ -1,5 +1,5 @@
-
-fun compose_opt f1 f2 x =
-    case f1 x of
-	   None => None
-	| Some v => f2 v
+(* compose two functions with "optional" values. if either function returns NONE, then the result is NONE *)
+fun compose_opt f g x =
+    case g x of
+	   NONE => NONE
+	| SOME v => f v
