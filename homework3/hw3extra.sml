@@ -23,4 +23,7 @@ fun factorial n =
 
 (* applies f to x until f x = x. iteration is a special type of recursion. *)
 fun fixed_point f x = do_until f (fn x => (f x) <> x) x
-    
+
+
+(* applies f to each value in pair and returns another pair *)
+fun map2 f (a1, a2) = (f a1, f a2)
