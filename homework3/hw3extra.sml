@@ -20,3 +20,7 @@ fun factorial n =
     if n = 0
     then 1
     else n * factorial (n - 1)
+
+(* applies f to x until f x = x. iteration is a special type of recursion. *)
+fun fixed_point f x = do_until f (fn x => (f x) <> x) x
+    
