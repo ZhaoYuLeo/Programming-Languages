@@ -14,7 +14,7 @@ val remove_factor_two  = do_until (fn x => x div 2) (fn x => x mod 2 <> 1)
 
 (* differece between x/2/2.../2 and x(x - 1)(x - 2 )...1 *)
 (* do_until is kind of like iteration. i have to use acc to store the result instead of stack. recursion makes a lot convenience for traversing tree structures *)
-val factorial_c n = #1 (do_until (fn (acc, n) => (acc * n, n - 1)) (fn (acc, n) => n <> 0 ) (1, n))
+fun factorial_c n = #1 (do_until (fn (acc, n) => (acc * n, n - 1)) (fn (acc, n) => n <> 0 ) (1, n))
 
 fun factorial n =
     if n = 0
