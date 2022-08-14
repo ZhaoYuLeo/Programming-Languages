@@ -36,3 +36,21 @@ fun app_all f g x =
 	  | apply (x::xs') = f x @ apply xs'
     in apply inital_list
     end
+
+
+(* add up all elements in the given list  *)
+fun add_up init lst =
+    case lst of
+	[] => init
+      | x::xs' => add_up (init + x) xs'
+
+
+(* returns f(xn,...,f(x2, f(x1, init))...) *)
+fun foldl f init lst =
+    case lst of
+	[] => init
+     | x::xs' => foldl f (f(x, init)) xs'
+
+(* same with add_up function but implemented by foldl *)
+val add_up_c = foldl (fn (n, acc) => n + acc)
+			 
