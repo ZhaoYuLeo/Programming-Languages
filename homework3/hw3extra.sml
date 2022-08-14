@@ -21,9 +21,18 @@ fun factorial n =
     then 1
     else n * factorial (n - 1)
 
-(* applies f to x until f x = x. iteration is a special type of recursion. *)
+(* apply f to x until f x = x. iteration is a special type of recursion. *)
 fun fixed_point f x = do_until f (fn x => (f x) <> x) x
 
 
-(* applies f to each value in pair and returns another pair *)
+(* apply f to each value in pair and returns another pair *)
 fun map2 f (a1, a2) = (f a1, f a2)
+
+
+(* apply f to every element of the list g x and concatenate the results into a single list *)
+fun app_all f g x =
+    let val inital_list = g x
+	fun apply ([]) = []
+	  | apply (x::xs') = f x @ apply xs'
+    in apply inital_list
+    end
