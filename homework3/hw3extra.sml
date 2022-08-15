@@ -86,3 +86,15 @@ val unfold_eg = unfold (fn n => if n = 0 then NONE else SOME(n, n-1)) 5 = [5, 4,
 
 (* n(n - 1)...1. use unfold to product a target list then use foldl to calculate the final result from the tartget list*)
 val factorial_u = (foldl (fn (n, acc) => n * acc) 1) o (unfold (fn n => if n = 0 then NONE else SOME(n, n - 1)))
+
+(* implement map using foldr. consider foldr as a sytax sugar for tail recursion applied f to xi from xn to x1 *)
+fun map_r f lst = foldr (fn (n, acc) => (f n)::acc) [] lst
+ 
+fun map_t f lst =
+    let fun helper (acc, lst) =
+	    case lst of
+		[] => acc
+	      | x::xs' => helper (acc @ [f x], xs')
+    in helper ([], lst)
+    end
+
