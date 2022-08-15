@@ -1,10 +1,12 @@
-(* compose two functions with "optional" values. if either function returns NONE, then the result is NONE *)
+(* Problems1 : compose two functions with "optional" values. if either function returns NONE, then the result is NONE *)
 fun compose_opt f g x =
     case g x of
 	   NONE => NONE
 	| SOME v => f v
 
-(* apply f to x and f again to that result and so on until p x is false *)
+
+
+(* Problems2 : apply f to x and f again to that result and so on until p x is false *)
 fun do_until f p x =
     if p x
     then do_until f p (f(x))
@@ -12,7 +14,9 @@ fun do_until f p x =
 	     
 val remove_factor_two  = do_until (fn x => x div 2) (fn x => x mod 2 <> 1)
 
-(* differece between x/2/2.../2 and x(x - 1)(x - 2 )...1 *)
+
+
+(* Problems3 : differece between x/2/2.../2 and x(x - 1)(x - 2 )...1 *)
 (* do_until is kind of like iteration. i have to use acc to store the result instead of stack. recursion makes a lot convenience for traversing tree structures *)
 fun factorial_c n = #1 (do_until (fn (acc, n) => (acc * n, n - 1)) (fn (acc, n) => n <> 0 ) (1, n))
 
@@ -21,15 +25,19 @@ fun factorial n =
     then 1
     else n * factorial (n - 1)
 
-(* apply f to x until f x = x. iteration is a special type of recursion. *)
+
+
+(* Problems4 : apply f to x until f x = x. iteration is a special type of recursion. *)
 fun fixed_point f x = do_until f (fn x => (f x) <> x) x
 
 
-(* apply f to each value in pair and returns another pair *)
+
+(* Problems5 : apply f to each value in pair and returns another pair *)
 fun map2 f (a1, a2) = (f a1, f a2)
 
 
-(* apply f to every element of the list g x and concatenate the results into a single list *)
+
+(* Problems6 : apply f to every element of the list g x and concatenate the results into a single list *)
 fun app_all f g x =
     let val inital_list = g x
 	fun apply ([]) = []
@@ -38,23 +46,25 @@ fun app_all f g x =
     end
 
 
+
+(* Problems7 : returns f(xn,...,f(x2, f(x1, init))...) *)
+fun foldl f init lst =
+    case lst of
+	[] => init
+     | x::xs' => foldl f (f(x, init)) xs'
+
 (* add up all elements in the given list  *)
 fun add_up init lst =
     case lst of
 	[] => init
       | x::xs' => add_up (init + x) xs'
 
-
-(* returns f(xn,...,f(x2, f(x1, init))...) *)
-fun foldl f init lst =
-    case lst of
-	[] => init
-     | x::xs' => foldl f (f(x, init)) xs'
-
 (* same with add_up function but implemented by foldl *)
 val add_up_c = foldl (fn (n, acc) => n + acc)
 
-(* returns a pair of list. the first part contains elements evaluated to true by f and the second part contains the rest. *)
+
+
+(* Problems8 : returns a pair of list. the first part contains elements evaluated to true by f and the second part contains the rest. *)
 fun partition f lst =
     case lst of
 	[] => ([], [])
@@ -75,8 +85,9 @@ fun partition_t f lst =
     in helper ([], []) lst
     end
 
+
    
-(* produces a list from a "seed" and a function which given a seed produces SOME of a pair of one element in result list and a new seed, or NONE if it is done seeding *)
+(* Problems9 : produces a list from a "seed" and a function which given a seed produces SOME of a pair of one element in result list and a new seed, or NONE if it is done seeding *)
 fun unfold f seed =
     case f seed of
 	NONE => [] (* done seeding *)
@@ -84,10 +95,14 @@ fun unfold f seed =
 
 val unfold_eg = unfold (fn n => if n = 0 then NONE else SOME(n, n-1)) 5 = [5, 4, 3, 2, 1]
 
-(* n(n - 1)...1. use unfold to product a target list then use foldl to calculate the final result from the tartget list*)
+
+
+(* Problems10 : n(n - 1)...1. use unfold to product a target list then use foldl to calculate the final result from the tartget list*)
 val factorial_u = (foldl (fn (n, acc) => n * acc) 1) o (unfold (fn n => if n = 0 then NONE else SOME(n, n - 1)))
 
-(* implement map using foldr. consider foldr as a sytax sugar for tail recursion applied f to xi from xn to x1 *)
+
+
+(* Problems11 : implement map using foldr. consider foldr as a sytax sugar for tail recursion applied f to xi from xn to x1 *)
 fun map_r f lst = foldr (fn (n, acc) => (f n)::acc) [] lst
  
 fun map_t f lst =
@@ -98,5 +113,12 @@ fun map_t f lst =
     in helper ([], lst)
     end
 
-(* applies f to each element x of lst, from left to right, and returns the list of those x for which f x evaluated to true, in the same order as they occurred in the argument list. using List.foldr *)
+
+
+(* Problems12 : applies f to each element x of lst, from left to right, and returns the list of those x for which f x evaluated to true, in the same order as they occurred in the argument list. using List.foldr *)
 fun filter_r f lst = foldr (fn (n, acc) => if f n then n::acc else acc) [] lst
+
+
+
+(* Problems13 : implement foldl using foldr *)
+fun foldl_r f init lst = foldr f init (foldr (fn (n, acc) => acc @ [n]) [] lst)
