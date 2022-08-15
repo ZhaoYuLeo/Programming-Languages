@@ -76,3 +76,13 @@ fun partition_t f lst =
     end
 
    
+(* produces a list from a "seed" and a function which given a seed produces SOME of a pair of one element in result list and a new seed, or NONE if it is done seeding *)
+fun unfold f seed =
+    case f seed of
+	NONE => [] (* done seeding *)
+     | SOME (result, new_seed) => result::unfold f new_seed
+
+val unfold_eg = unfold (fn n => if n = 0 then NONE else SOME(n, n-1)) 5 = [5, 4, 3, 2, 1]
+
+(* n(n - 1)...1. use unfold to product a target list then use foldl to calculate the final result from the tartget list*)
+val factorial_u = (foldl (fn (n, acc) => n * acc) 1) o (unfold (fn n => if n = 0 then NONE else SOME(n, n - 1)))
