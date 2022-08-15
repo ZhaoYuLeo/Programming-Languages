@@ -98,3 +98,5 @@ fun map_t f lst =
     in helper ([], lst)
     end
 
+(* applies f to each element x of lst, from left to right, and returns the list of those x for which f x evaluated to true, in the same order as they occurred in the argument list. using List.foldr *)
+fun filter_r f lst = foldr (fn (n, acc) => if f n then n::acc else acc) [] lst
