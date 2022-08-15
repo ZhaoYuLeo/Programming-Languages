@@ -53,4 +53,26 @@ fun foldl f init lst =
 
 (* same with add_up function but implemented by foldl *)
 val add_up_c = foldl (fn (n, acc) => n + acc)
-			 
+
+(* returns a pair of list. the first part contains elements evaluated to true by f and the second part contains the rest. *)
+fun partition f lst =
+    case lst of
+	[] => ([], [])
+      | x::xs' => let val (true_list, false_list) = partition f xs'
+		  in if f x
+		     then (x::true_list, false_list)
+		     else (true_list, x::false_list)
+		  end
+
+(* acc store the return value of the stack, calculate in reverse order *)
+fun partition_t f lst =
+    let fun helper acc lst =
+	    case lst of
+		[] => acc
+	      | x::xs' => helper (if f x
+				   then (x::(#1 acc), #2 acc)
+				   else (#1 acc, x::(#2 acc))) xs'
+    in helper ([], []) lst
+    end
+
+   
