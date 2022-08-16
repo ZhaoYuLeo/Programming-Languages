@@ -121,4 +121,30 @@ fun filter_r f lst = foldr (fn (n, acc) => if f n then n::acc else acc) [] lst
 
 
 (* Problems13 : implement foldl using foldr *)
-fun foldl_r f init lst = foldr f init (foldr (fn (n, acc) => acc @ [n]) [] lst)
+fun foldl_r f init lst = foldr f init (foldr (fn (n, acc) => acc @ [n]) [] lst) (* List.rev lst *)
+
+
+
+(* Problem14 : define a(polymorphic) type for binary trees where data is at internal nodes but not at leaves *)
+			       
+datatype 'a binary_trees = Leaf | Node of ('a binary_trees) * 'a * ('a binary_trees)
+							   
+fun tree_map f tree =
+    case tree of
+	Leaf => Leaf
+     | Node (lt, data, rt) => Node(tree_map f lt, f data, tree_map f rt)
+
+						 
+fun tree_fold f init tree =
+    case tree of
+	Leaf => init
+   (* | Node (lt, data, rt) => tree_fold f (tree_fold f (f(data, init)) lt) rt *)
+      | Node (lt, data, rt) => f (data, tree_fold f init lt, tree_fold f init rt)
+
+
+fun tree_filter f tree =
+    case tree of
+	Leaf => Leaf
+      | Node (lt, data, rt) => if f data
+			       then Node (tree_filter f lt, data, tree_filter f rt)
+			       else Leaf
