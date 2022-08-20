@@ -37,3 +37,38 @@ val test1 = pass_or_fail s1 = pass
 val test2 = has_passed s1 = true
 val test3 = number_passed ([s1, s2, s3]) = 2
 val test4 = number_misgraded ([(fail, s1), (pass, s2), (pass, s3)]) = 2
+
+
+datatype 'a tree = leaf
+                 | node of { value : 'a, left : 'a tree, right : 'a tree }
+datatype flag = leave_me_alone | prune_me
+
+(* Problem5 : return height of the tree which is the length of the longeset path to a leaf *)
+fun tree_height t =
+    case t of
+	leaf => 0
+      | node {value=v, left=lt, right=rt} => Int.max(tree_height lt, tree_height rt) + 1
+											   
+(* Problem6 : return the sum of all values in the nodes of an int tree *)
+(* how to iterate the tree and sum them up *)			   
+fun sum_tree t =
+    case t of
+	leaf => 0
+      | node {value=v, left=lt, right=rt} => v + sum_tree lt + sum_tree rt
+	 
+(* Problem7 : if the value in the node is prune_me replace it with leaf *)
+fun gardener t =
+    case t of
+	leaf => leaf
+      | node {value=v, left=lt, right=rt} => if v = prune_me
+					     then leaf
+				             else node {value=v, left=lt, right=rt}
+		    
+val t1 = node {value=1, left=leaf, right=leaf}
+val t2 = node {value=2, left=t1, right=leaf}
+val t3 = node {value=2, left=t2, right=t1}
+val t4 = node {value=prune_me, left=leaf, right=leaf}
+val test5 = tree_height t3 = 3
+val test6 = sum_tree t3 = 6
+val test7 = gardener t4 = leaf
+
