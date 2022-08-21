@@ -138,8 +138,9 @@ val test8_c0 = redrop ([1,2,3], 0) = [1,2,3]
 val test8_c1 = redrop ([1,2,3], 2) = [3]
 val test8_c2 = redrop ([1,2,3], 3) = []
 val test8_c3 = (redrop ([1,2,3], ~1) handle Subscript => []) = []
-val test8_c4 = (redrop ([1,2,3], 4) handle Subscript => []) = []						val test8_c5 = retake ([1,2,3,4,5,6], 3) @ redrop ([1,2,3,4,5,6], 3) = [1,2,3,4,5,6]	   
-
+val test8_c4 = (redrop ([1,2,3], 4) handle Subscript => []) = []
+val test8_c5 = retake ([1,2,3,4,5,6], 3) @ redrop ([1,2,3,4,5,6], 3) = [1,2,3,4,5,6]
+									   
 val test8_d0 = reconcat [[1,2], [3,4], [5,6]] = [1,2,3,4,5,6]
 val test8_d1 = reconcat [["s"], ["t"], ["r"]] = ["s", "t", "r"]
 val test8_d2 = reconcat [[],[],[]] = []						    
@@ -150,4 +151,111 @@ val test8_e1 = regetOpt (NONE, 8) = 8
 val test8_f0 = rejoin (SOME NONE) = NONE
 val test8_f1 = rejoin (SOME (SOME 9)) = SOME 9
 val test8_f2 = rejoin NONE = NONE
+
+				 
+datatype nat = ZERO | SUCC of nat
+
+(* Problem9 : returns whether the given natural number is positive or zero *)
+fun is_positive n =
+    case n of
+	ZERO => false
+      | SUCC _ => true
+	      
+(* Problem10 : returns the predecessor of the given natural number n; Throw an exception Negative if n is ZERO. *)
+exception Negative
+	      
+fun pred n =
+    case n of
+	ZERO => raise Negative
+      | SUCC pre => pre
+
+(* Problem11 : returns the corresponding int of the given natural number n *)
+fun nat_to_int n =
+    let fun helper (acc, n) =
+	    case n of
+		ZERO => acc
+	      | SUCC pre => helper (acc + 1, pre)
+    in helper(0, n)
+    end
+	
+(* Problem12 : returns the corresponding natural number of the given integer, or throws a Negative exception if the integer was negative *)
+fun int_to_nat i =
+    let fun helper (acc, i) =
+	    if i < 0
+	    then raise Negative
+	    else if i = 0
+	    then acc
+	    else helper (SUCC acc, i - 1)
+    in helper(ZERO, i)
+    end
+	
+(* Problem13: perform addition *)
+fun add (n1, n2) =
+    let fun helper (acc, n1) =
+	    case n1 of
+		ZERO => acc
+	      | SUCC pre => helper (SUCC acc, pre)
+    in helper(n2, n1)
+    end
+
+(* Problem14 : perform substraction. assume n1 is always bigger than n2. throws a Negative exception when n1 is less than n2 which is actually implemented in pred function. *)
+fun sub (n1, n2) =
+    let fun helper (acc, n2) =
+	    case n2 of
+		ZERO => acc
+	      | SUCC pre => helper (pred acc, pre)
+    in helper (n1, n2)
+    end
+
+(* Problem15 : perform multiplication. perform better if n1 is the less one. *)
+fun mult (n1, n2) =
+    let fun helper (acc, n1) =
+	    case n1 of
+		ZERO => acc
+	      | SUCC pre => helper (add(acc, n2), pre)
+    in helper (ZERO, n1)
+    end
+
+(* Problem16 : returns true when the first argument is less than the second, otherwise false *)
+fun less_than (n1, n2) =
+    case (n1, n2) of
+	(ZERO, SUCC _) => true
+      | (SUCC _, ZERO) => false
+      | (ZERO, ZERO) => false
+      | (SUCC pre_n1, SUCC pre_n2) => less_than (pre_n1, pre_n2)
+							    
+val n1 = SUCC ZERO
+val n2 = SUCC n1
+val n3 = SUCC n2
+val n4 = SUCC n3
+val test9_0 = is_positive ZERO = false
+val test9_1 = is_positive (SUCC (SUCC ZERO)) = true
+
+val test10_0 = pred (SUCC (SUCC ZERO)) = (SUCC ZERO)
+val test10_1 = (pred ZERO handle Negative => ZERO) = ZERO
+						      
+val test11_0 = nat_to_int ZERO = 0
+val test11_1 = nat_to_int (SUCC (SUCC n4)) = 6
+						 
+val test12_0 = int_to_nat 0 = ZERO
+val test12_1 = int_to_nat 3 = n3
+val test12_2 = (int_to_nat ~1 handle Negative => ZERO) = ZERO
+							     
+val test13_0 = add (ZERO, n3) = n3
+val test13_1 = add (n1, n2) = n3
+val test13_2 = add (n2, n2) = n4
+				  
+val test14_0 = sub (n4, n1) = n3
+val test14_1 = sub (n2, n2) = ZERO
+val test14_2 = sub (n4, n2) = n2
+val test14_3 = (sub (n1, n4) handle Negative => ZERO) = ZERO
+							    
+val test15_0 = mult (ZERO, n4) = ZERO
+val test15_1 = mult (n1, n4) = n4
+val test15_2 = mult (n2, n2) = n4
 				   
+val test16_0 = less_than (ZERO, n1) = true
+val test16_1 = less_than (n2, n4) = true
+val test16_2 = less_than (n3, n1) = false
+val test16_3 = less_than (n2, n2) = false
+					
