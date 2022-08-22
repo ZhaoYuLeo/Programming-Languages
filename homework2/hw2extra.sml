@@ -258,4 +258,125 @@ val test16_0 = less_than (ZERO, n1) = true
 val test16_1 = less_than (n2, n4) = true
 val test16_2 = less_than (n3, n1) = false
 val test16_3 = less_than (n2, n2) = false
-					
+
+datatype intSet =
+  Elems of int list (*list of integers, possibly with duplicates to be ignored*)
+| Range of { from : int, to : int }  (* integers from one number to another *)
+| Union of intSet * intSet (* union of the two sets *)
+| Intersection of intSet * intSet (* intersection of the two sets *)
+
+			       
+(* Problem18 : returns whether the set contains a certain element or not *)
+fun contains (s, i) =
+    case s of
+	Elems lst => List.exists (fn x => x = i) lst
+     | Range {from, to} => i <= to andalso i >= from
+     | Union (s1, s2) => contains (s1, i) orelse contains (s2, i)
+     | Intersection (s1, s2) => contains (s1, i) andalso contains (s2, i)
+
+(* Problem19 : returns a list with the set's elements, without deplicates *)
+(* lst1 and lst2 are both ordered. returns new ordered list contains all elements in lst1 and lst2 *)
+fun merge (lst1, lst2) =
+    case (lst1, lst2) of
+	([], xs2) => xs2
+      | (xs1, []) => xs1
+      | (x1::xs1', x2::xs2') => if x1 < x2
+				then x1::merge (xs1', x2::xs2')
+				else x2::merge (x1::xs1', xs2')
+
+(* mergesort bottom-up *)
+fun mergeSort lst =
+    let fun sortAdjacency lst =
+	    case lst of
+		[] => []
+	      | x::[] => [x]
+	      | x1::x2::xs' => (merge (x1, x2))::(sortAdjacency xs')
+	fun repeat lst =
+	    case lst of
+		[] => []
+	      | x::[] => x
+	      | xs => repeat(sortAdjacency xs)
+    in repeat(List.map (fn x => [x]) lst)
+    end
+
+(* returns a list without duplicates and well ordered *)
+fun deDuplicateOrdered lst =
+    let fun helper (lst) =
+	    case lst of
+		[] => []
+	      | x::[] => [x]
+	      | x1::x2::xs' => if x1 = x2
+			       then helper(x2::xs')
+			       else x1::helper(x2::xs')
+    in helper (mergeSort lst)
+    end
+	
+val de_duplicate_ordered_test = deDuplicateOrdered [1,1,6,9,6,7] = [1,6,7,9]
+								       
+(* returns a list without duplicates and kept the original order from left to right *)
+fun deDuplicateL lst =
+    let fun helper (lst, acc) =
+	    case lst of
+		[] => acc
+	      | x::xs' => case (List.find (fn i => i = x ) acc) of
+			      NONE => helper (xs', acc @ [x])
+			    | SOME _ => helper (xs', acc)
+    in helper (lst, [])
+    end
+
+val de_duplicate_l_test = deDuplicateL [1,1,6,9,6,7] = [1,6,9,7]
+	
+(* returns a list without duplicates and kept the original order from right to left *)
+fun deDuplicateR lst =
+    case lst of
+	[] => []
+      | x::xs' => let val res = deDuplicateR xs'
+		  in case (List.find (fn i => i = x ) res) of
+			 NONE => x::res
+		       | SOME _ => res
+		  end
+
+val de_duplicate_r_test = deDuplicateR [1,1,6,9,6,7] = [1,9,6,7]
+						 
+(* returns list which contains integer from m to  (including n particularly). If n is less than m, returns []. *)
+fun range (m, n) =
+    if m > n
+    then []
+    else m::range(m+1, n)
+
+(* return the union of lst1 and lst2, kind of like orelse. which kind of order is needed is really a problem。 maybe we just don‘t care about order. we just need same elements which create the set. *) 
+fun union (lst1, lst2) = deDuplicateOrdered (lst1 @ lst2)
+
+(* return the intersection of lst1 and lst2, kind of like andalso *)
+fun intersection (lst1, lst2) =
+    let
+	fun helper (xs1, xs2, acc) =
+	    case (xs1, xs2) of
+		([], _) => acc
+	      | (_, []) => acc
+	      | (x1::xs1', x2::xs2') => helper (if x1 < x2
+						then (xs1', x2::xs2', acc)
+						else if x1 > x2
+						then  (x1::xs1', xs2', acc)
+						else (xs1', xs2', x1::acc))
+    in helper (deDuplicateOrdered lst1,  deDuplicateOrdered lst2, [])
+    end
+
+val intersection_test = intersection ([6,5,3,7], [8,7,2,5,3]) = [7,5,3]
+
+(* returns a list with the set's elements, without deplicate *)
+fun toList s =
+    case s of
+	Elems lst => deDuplicateOrdered lst
+      | Range {from, to} => range(from, to)
+      | Union (s1, s2) => union(toList s1, toList s2)
+      | Intersection (s1, s2) => intersection(toList s1, toList s2)
+
+(* Problem17 : determines if the set is empty or not *)
+fun isEmpty s =
+    case s of
+	Elems [] => true
+      | Elems _ => false
+      | Range {from, to} => from > to (* include to *)
+      | Union (s1, s2) => isEmpty s1 andalso isEmpty s2					     
+      | Intersection (s1, s2) => isEmpty s1 orelse isEmpty s2 orelse intersection(toList s1, toList s2) = [] (* O? *)
