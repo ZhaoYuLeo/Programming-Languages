@@ -293,5 +293,82 @@ fun not_so_quick_sort xs =
 
 val test21_0 = not_so_quick_sort ([9,8,7,6,5,4,3,2,1]) = [1,2,3,4,5,6,7,8,9]
 val test21_1 = not_so_quick_sort ([]) = []
-val test21_1 = not_so_quick_sort ([7,8,4,4,9,1,5,0,6]) = [0,1,4,4,5,6,7,8,9]
+val test21_2 = not_so_quick_sort ([7,8,4,4,9,1,5,0,6]) = [0,1,4,4,5,6,7,8,9]
 	
+(* Problem22 : given two numbers k and n it attempts to evenly divide k into n as many times as possible, and returns a pair(d, n2) where d is the number of times while n2 is th resulting n after all those divisions. *)
+fun fullDivide (n, k) =
+    if k = 0
+    then (0,0)
+    else if n = 0 orelse k mod n <> 0 
+    then (0, k)
+    else let val (a, b) = fullDivide (n, k div n)
+	 in (a + 1, b)
+	 end
+
+val test22_0 = fullDivide (2, 40) = (3,5)
+val test22_1 = fullDivide (3, 10) = (0,10) (* 3 does not divide 10 *)
+val test22_2 = fullDivide (3, 18) = (2,2)					
+val test22_3 = fullDivide (10, 0) = (0,0) (* 0 can never be divided into 10 *)
+val test22_4 = fullDivide (0, 10) = (0,10)
+				       
+(* Problem23 : given a number n returns a list of pairs (d, k) where d is a prime number dividing n and k is the number of times it fits. The pairs should be in increasing order of prime factor, and the process should stop when the divisor considered surpasses the square root of n. *) 
+fun factorize n =
+    let fun helper (k, n) =
+	    if n = 1
+	    then []
+	    else if k * k > n
+	    then [(n, 1)] (* if n can be divided into some numbers, those numbers cannot be all larger than the square root of n. each time we do fullDivide, we get the smaller factor. when we reach this branch, it means that no smaller factor for n has been found before, otherwise n would not exist. *)
+	    else case fullDivide (k, n) of
+		     (0, x) => helper (k + 1, n)
+		   | (a, 1) => [(k, a)]
+		   | (a, b) => (k, a)::(helper (k + 1, b)) (* no need to keep k prime. n is not divisible by k while k has one factor and n has lose it. *)
+    in helper (2, n)
+    end
+	
+	
+val test23_0 = factorize 20 = [(2,2), (5,1)]
+val test23_1 = factorize 36 = [(2,2), (3,2)]
+val test23_2 = factorize 1 = []
+val test23_3 = factorize 35 = [(5,1), (7,1)]
+val test23_4 = factorize 49 = [(7,2)]
+				 
+(* Problem24 : given a factorization of a number n as described in the previous problem computes back the number n. So this should do the opposite of factorize *)
+fun multiply n =
+    let fun helper (n, acc) =
+	    case n of
+		[] => acc
+	      | (d, k)::xs' => helper (if k < 0
+				       then raise Empty (* or something else *)
+				       else if k = 0
+				       then (xs', acc)
+				       else ((d, k - 1)::xs', d * acc))
+						
+    in helper (n, 1)
+    end
+
+val test24_0 = multiply [] = 1
+val test24_1 = multiply [(2,2), (3,2)] = 36
+val test24_2 = multiply [(2,2), (5,1)] = 20
+					     
+    
+(* Problem25 : given a factorization list result from factorize creats a list all of possible products produced from using some or all of those prime factors no more than the number of times they are available. This should end up being a list of all the divisors of the number n that gave rise to the list. For extra challenge, you recursive process should return the numbers in this order, as opposed to sorting them afterwards. *)
+fun all_products factors =
+    let val number = multiply factors
+	val min = case factors of
+		      [] => 1
+		    | (min, _)::xs' => min
+	val max = number div min
+	fun helper (d, acc) =
+	    if d = min
+	    then d::acc
+	    else helper (d - 1, if number mod d = 0 then d::acc else acc)
+			      
+    in if min = 1 then [1] else 1::helper(max - 1, [max, number])
+    end	
+    
+val test25_0 = all_products ([(2,2), (5,1)]) = [1,2,4,5,10,20] 
+val test25_1 = all_products ([(2,2), (3,2)]) = [1,2,3,4,6,9,12,18,36]
+val test25_2 = all_products ([(2,3), (3,2), (5,2), (31,2)])
+val test25_3 = all_products ([]) = [1]
+val test25_4 = all_products ([(2,3), (5,1)]) = [1,2,4,5,8,10,20,40]
+						   
