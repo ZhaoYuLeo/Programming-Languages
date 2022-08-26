@@ -26,7 +26,7 @@ datatype valu = Const of int
 fun g f1 f2 p =
     let 
 	val r = g f1 f2 
-    in
+     in
 	case p of
 	    Wildcard          => f1 ()
 	  | Variable x        => f2 x
@@ -46,18 +46,16 @@ datatype typ = Anything
 (**** you can put all your code here ****)
 
 (* Problem1 : takes a string list and returns a string list that has only the strings in the argument that start with an uppercase letter *)
-fun only_capitals str_list =
-    List.filter (fn str => Char.isUpper(String.sub(str, 0))) str_list
+
+val only_capitals = List.filter (fn str => Char.isUpper(String.sub(str, 0)))
 
 
 (* Problem2 : takes a string list and returns the longest string in the list. returns "" when the list is empty. In the case of a tie, return the sstring closest to the beginning of the list. *)
-fun longest_string1 str_list =
-    foldl (fn (str, max) => if String.size(str) > String.size(max) then str else max) "" str_list
+val longest_string1 = foldl (fn (str, max) => if String.size(str) > String.size(max) then str else max) ""
 
 
 (* Problem3 : exactly like longest_string1 except returns the string closest to the end of the list in the case of tie. *)
-fun longest_string2 str_list =
-    foldl (fn (str, max) => if String.size(str) >= String.size(max) then str else max) "" str_list
+val longest_string2 = foldl (fn (str, max) => if String.size(str) >= String.size(max) then str else max) ""
 
 
 (* Problem4 : abstraction of ...1 and ...2  *)
@@ -140,3 +138,50 @@ fun match (v, p) =
 
 (* Problem12 : takes a value and a list of patterns and returns a (string * valu) list option, namely NONE if no pattern in the list matches or SOME lst where lst is the list of bindings for the first pattern in the list that matches *)
 fun first_match v p_lst = SOME (first_answer (fn p => match (v, p)) p_lst) handle NoAnswer => NONE 
+
+
+(* Problem13 : "type-check" the pattern list to see if there exists some typ (call it t) that all the patterns in the list can have. If so, return SOME t, else return NONE. Assume list elements all have different first fields (the constructor name), but there are probably elements with the same second field (the datatype name).  *)
+exception NoMatch
+
+fun typecheck_patterns (typs, patterns) =
+    let
+	fun general_type (typ1, typ2) =
+	    case (typ1, typ2) of
+		(Anything, _) => typ2
+	      | (_, Anything) => typ1
+	      | (UnitT, UnitT) =>  UnitT
+	      | (IntT, IntT) => IntT
+	      | (TupleT ts1, TupleT ts2) => if length ts1 = length ts2
+					    then TupleT (List.map general_type (ListPair.zip (ts1, ts2)))
+					    else raise NoMatch			
+	      | (Datatype s1, Datatype s2) => if s1 = s2 then Datatype s1 else raise NoMatch
+	      | _ => raise NoMatch
+			   
+        (* i guess the type of constructor in the patterns should not be more general than that in the datatypes bindings *)
+	fun suitable (t, target) =
+	    case (t, target) of
+		(_, Anything) => true
+	      | (UnitT, UnitT) => true
+	      | (IntT, TntT) => true
+	      | (TupleT ts1, TupleT ts2) => length ts1 = length ts2 andalso List.all suitable (ListPair.zip (ts1, ts2))
+	      | (Datatype s1, Datatype s2) => s1 = s2
+	      | _ => false
+			 
+			   
+	fun pattern_to_typ patn =
+	    case patn of
+		Wildcard => Anything
+	      | Variable _ => Anything
+	      | UnitP => UnitT
+	      | ConstP _ => IntT
+	      | TupleP ps' => TupleT (List.map pattern_to_typ ps')
+	      (* what would happened if p doesn't match any typs *)
+	      | ConstructorP(cn, p') => case List.find (fn x => #1 x = cn) typs of (* all have different constructor name *)
+					    NONE => raise NoMatch
+					  | SOME (cn2, tn, t) => (if suitable (pattern_to_typ p', t)
+								  then Datatype tn
+								  else raise NoMatch)  
+    in  if patterns = []
+	then NONE
+	else SOME (List.foldl (fn (p, acc) => general_type (acc, pattern_to_typ p)) Anything patterns) handle NoMatch => NONE
+    end
