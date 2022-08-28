@@ -157,17 +157,7 @@ fun typecheck_patterns (typs, patterns) =
 	      | (Datatype s1, Datatype s2) => if s1 = s2 then Datatype s1 else raise NoMatch
 	      | _ => raise NoMatch
 			   
-        (* i guess the type of constructor in the patterns should not be more general than that in the datatypes bindings *)
-	fun suitable (t, target) =
-	    case (t, target) of
-		(_, Anything) => true
-	      | (UnitT, UnitT) => true
-	      | (IntT, TntT) => true
-	      | (TupleT ts1, TupleT ts2) => length ts1 = length ts2 andalso List.all suitable (ListPair.zip (ts1, ts2))
-	      | (Datatype s1, Datatype s2) => s1 = s2
-	      | _ => false
-			 
-			   
+		   
 	fun pattern_to_typ patn =
 	    case patn of
 		Wildcard => Anything
@@ -175,12 +165,11 @@ fun typecheck_patterns (typs, patterns) =
 	      | UnitP => UnitT
 	      | ConstP _ => IntT
 	      | TupleP ps' => TupleT (List.map pattern_to_typ ps')
-	      (* what would happened if p doesn't match any typs *)
 	      | ConstructorP(cn, p') => case List.find (fn x => #1 x = cn) typs of (* all have different constructor name *)
 					    NONE => raise NoMatch
-					  | SOME (cn2, tn, t) => (if suitable (pattern_to_typ p', t)
-								  then Datatype tn
-								  else raise NoMatch)  
+					  | SOME (cn2, tn, t) => (general_type (pattern_to_typ p', t);
+								  Datatype tn)
+								     
     in  if patterns = []
 	then NONE
 	else SOME (List.foldl (fn (p, acc) => general_type (acc, pattern_to_typ p)) Anything patterns) handle NoMatch => NONE
