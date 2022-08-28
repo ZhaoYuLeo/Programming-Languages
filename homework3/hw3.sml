@@ -99,10 +99,10 @@ fun all_answers f xs =
 
 (* Problem9 : *)
 (* takes a pattern and returns how many Wildcard patterns it contains *)
-val count_wildcards = g (fn x => 1) (fn x => 0)
+val count_wildcards = g (fn _ => 1) (fn x => 0)
 
 (* takes a pattern and returns teh number of Wildcard patterns it contains plus the sum of the string lengths of all the variables in the variable patterns it contains *)
-val count_wild_and_variable_lengths = g (fn x => 1) (fn x => String.size(x))
+val count_wild_and_variable_lengths = g (fn _ => 1) String.size
 
 (* takes a string and a pattern (as a pair) and returns the number of times the string appears as a variable in the pattern *)
 fun count_some_var (str, p) = g (fn x => 0) (fn x => if x = str then 1 else 0) p
