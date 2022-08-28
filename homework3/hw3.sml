@@ -1,3 +1,4 @@
+
 (* Coursera Programming Languages, Homework 3, Provided Code *)
 
 exception NoAnswer
@@ -127,11 +128,11 @@ fun check_pat p =
 (* Problem11 : takes a valu * pattern and returns a (string * valu) list option, namely NONE if the pattern does not match and SOME lst where lst is the list of bindings if it does *)
 fun match (v, p) =
     case (v, p) of
-	(_, Wildcard)        => SOME []		      
-      | (_, Variable s)      => SOME [(s, v)]
-      | (Unit, UnitP)        => SOME []
-      | (Const v_int, ConstP p_int)      => if v_int = p_int then SOME [] else NONE
-      | (Tuple v_lst, TupleP p_lst)      => if length v_lst = length p_lst then all_answers match (ListPair.zip(v_lst, p_lst)) else NONE (* no nested list since all elements in a list have same type *)
+	(_, Wildcard) => SOME []		      
+      | (_, Variable s) => SOME [(s, v)]
+      | (Unit, UnitP) => SOME []
+      | (Const v_int, ConstP p_int) => if v_int = p_int then SOME [] else NONE
+      | (Tuple v_lst, TupleP p_lst) => if length v_lst = length p_lst then all_answers match (ListPair.zip(v_lst, p_lst)) else NONE (* no nested list since all elements in a list have same type *)
       | (Constructor(vname, v'), ConstructorP(pname, p')) => if vname = pname then match(v', p') else NONE
       | _ => NONE
 
@@ -147,10 +148,10 @@ fun typecheck_patterns (typs, patterns) =
     let
 	fun general_type (typ1, typ2) =
 	    case (typ1, typ2) of
-		(Anything, _) => typ2
-	      | (_, Anything) => typ1
-	      | (UnitT, UnitT) =>  UnitT
-	      | (IntT, IntT) => IntT
+		(Anything, _)  => typ2
+	      | (_, Anything)  => typ1
+	      | (UnitT, UnitT) => UnitT
+	      | (IntT, IntT)   => IntT
 	      | (TupleT ts1, TupleT ts2) => if length ts1 = length ts2
 					    then TupleT (List.map general_type (ListPair.zip (ts1, ts2)))
 					    else raise NoMatch			
@@ -160,10 +161,10 @@ fun typecheck_patterns (typs, patterns) =
 		   
 	fun pattern_to_typ patn =
 	    case patn of
-		Wildcard => Anything
+		Wildcard   => Anything
 	      | Variable _ => Anything
-	      | UnitP => UnitT
-	      | ConstP _ => IntT
+	      | UnitP      => UnitT
+	      | ConstP _   => IntT
 	      | TupleP ps' => TupleT (List.map pattern_to_typ ps')
 	      | ConstructorP(cn, p') => case List.find (fn x => #1 x = cn) typs of (* all have different constructor name *)
 					    NONE => raise NoMatch
