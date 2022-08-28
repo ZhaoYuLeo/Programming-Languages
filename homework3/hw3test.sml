@@ -102,8 +102,6 @@ val typecheck_patterns_8 = typecheck_patterns ([], [TupleP[ConstP 1], TupleP[Uni
 
 val typecheck_patterns_9 = typecheck_patterns ([], [ConstructorP("n", Variable "a")]) = NONE 
 
-val typecheck_patterns_10 = typecheck_patterns ([("n", "t", TupleT[IntT, Anything])], [ConstructorP("n", Variable "a")]) = NONE 
-
 val typecheck_patterns_11 = typecheck_patterns ([("n", "t", TupleT[IntT, Anything])], [ConstructorP("n", TupleP[ConstP 1, Variable "a"])]) = SOME (Datatype "t")
 
 
