@@ -28,3 +28,10 @@
         [(null? xs) (error "list-nth-mod: empty list")]
         [#t (car (list-tail xs (remainder n (length xs))))]))
 
+;; Problem4: Takes a stream s and a number n and returns a list holding the
+;; first n values produced by s in order. Assume n is non-negative.
+(define (stream-for-n-steps s n)
+  (if (= n 0)
+      null
+      (let ([pr (s)])
+        (cons (car pr) (stream-for-n-steps (cdr pr) (- n 1))))))
