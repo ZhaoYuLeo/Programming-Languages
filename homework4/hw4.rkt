@@ -24,4 +24,7 @@
 ;; negative raise (error "list-nth-mod: empty list") when the given list is
 ;; empty.
 (define (list-nth-mod xs n)
-  (car (list-tail xs (remainder n (length xs)))))
+  (cond [(< n 0) (error "list-nth-mod: negative number")]
+        [(null? xs) (error "list-nth-mod: empty list")]
+        [#t (car (list-tail xs (remainder n (length xs))))]))
+
