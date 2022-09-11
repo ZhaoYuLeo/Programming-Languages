@@ -55,3 +55,10 @@
            [g (lambda ()
                 (cons "dog.jpg" (lambda () (f))))])
     (lambda () (f))))
+
+;; Problem7 : Takes a stream s and returns another stream. If s would produce
+;; v for its ith element, then (stream-add-zero s) would produce the pair
+;; (0 . v) for its ith element.
+(define (stream-add-zero s)
+  (let ([pr (s)])
+    (lambda () (cons (cons 0 (car pr)) (stream-add-zero (cdr pr))))))
