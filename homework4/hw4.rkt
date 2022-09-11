@@ -76,3 +76,16 @@
                                     (lambda () (f (if (null? (cdr xs)) pxs (cdr xs)); have to know when have gone through the list
                                                   (if (null? (cdr ys)) pys (cdr ys))))))])
     (lambda () (f xs ys))))
+
+;; Problem9 : Takesa value v and a vector vec. Return #f if no vector element is
+;; a pair with a car field equal to v, else return the first pair with an equal
+;; car field. Allows vector elements not to be pairs in which case it skips them
+(define (vector-assoc v vec)
+  (letrec ([len (vector-length vec)]
+           [f (lambda (n) (if (= n len)
+                               #f
+                               (let ([elem (vector-ref vec n)])
+                                 (cond [(not (pair? elem)) (f (+ n 1))]
+                                       [(equal? (car elem) v) elem]
+                                       [#t (f (+ n 1))]))))])
+    (f 0)))
