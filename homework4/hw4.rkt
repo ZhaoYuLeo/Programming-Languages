@@ -62,3 +62,17 @@
 (define (stream-add-zero s)
   (let ([pr (s)])
     (lambda () (cons (cons 0 (car pr)) (stream-add-zero (cdr pr))))))
+
+;; Problem8 : Takes two lists xs and ys and returns a stream. They mayn't have
+;; the same length, but assume they are both non-empty. The elements producted
+;; by the stream are pairs where the first part is from xs and the second part
+;; is from ys. The stream cycles forever through the lists. (i.e. if xs is '(1
+;; 2 3) and ys is '("a" "b"), then the stream would produce, (1 . "a"),(2 ."b")
+;; , (3 . "a"), (1 . "b"), (2 . "a"), (3 . "b"), (1 . "a"), (2 . "b"), etc)
+(define (cycle-lists xs ys)
+  (letrec ([pxs xs]
+           [pys ys]
+           [f (lambda (xs ys) (cons (cons (car xs) (car ys)); Assume both non-empty
+                                    (lambda () (f (if (null? (cdr xs)) pxs (cdr xs)); have to know when have gone through the list
+                                                  (if (null? (cdr ys)) pys (cdr ys))))))])
+    (lambda () (f xs ys))))
