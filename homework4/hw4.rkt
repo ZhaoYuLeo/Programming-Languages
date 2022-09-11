@@ -35,3 +35,10 @@
       null
       (let ([pr (s)])
         (cons (car pr) (stream-for-n-steps (cdr pr) (- n 1))))))
+
+
+;; Problem5: Products a stream of natural numbers except numbers divisble by
+;; 5 are negated like (1,2,4,-5,6,7,8,9,-10,11,...).
+(define funny-number-stream
+  (letrec ([f (lambda (x) (cons x (f (+ 1 x))))])
+    (f 1)))
