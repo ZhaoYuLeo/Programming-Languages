@@ -12,17 +12,24 @@
 ;; second to last elements of the original list,etc. (i.e. (palindromic
 ;; (list 1 2 4 8)) evaluates to (list 9 6 6 9)).
 (define (palindromic xs)
-  (letrec ([invert (lambda (xs acc) (if (null? xs)
-                                   acc
-                                   (invert (cdr xs) (cons (car xs) acc))))]
-           [sum-map (lambda (xs ys acc) (if (null? xs); invariant: xs has same length with ys
-                                          acc
-                                          (sum-map (cdr xs) (cdr ys) (cons (+ (car xs) (car ys)) acc))))])
+  (letrec ([invert (lambda (xs acc)
+                     (if (null? xs)
+                         acc
+                         (invert (cdr xs) (cons (car xs) acc))))]
+           ; invariant: xs has same length with ys
+           [sum-map (lambda (xs ys acc)
+                      (if (null? xs)
+                          acc
+                          (sum-map (cdr xs) (cdr ys)
+                                   (cons (+ (car xs) (car ys)) acc))))])
     (sum-map xs (invert xs null) null)))
 
-;; Problem2 : This is a stream, the first element of which is 0, the second one
-;; is 1, and each successive element is the sum of two immediately pre-
+;; Problem2 : This is a stream, the first element of which is 0, the second
+;; one is 1, and each successive element is the sum of two immediately pre-
 ;; ceding elements.
+;; the key point of stream is thunk
 (define fibonacc
-         (letrec ([s (lambda (acc1 acc2) (cons (+ acc1 acc2) (lambda () (s (+ acc1 acc2) acc1))))])
-           (lambda () (cons 0 (lambda () (cons 1 (lambda () (s 1 0)))))))); the key point of stream is thunk
+         (letrec ([s (lambda (acc1 acc2)
+                       (cons (+ acc1 acc2) (lambda ()
+                                             (s (+ acc1 acc2) acc1))))])
+           (lambda () (cons 0 (lambda () (cons 1 (lambda () (s 1 0))))))))
