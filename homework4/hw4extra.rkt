@@ -33,3 +33,22 @@
                        (cons (+ acc1 acc2) (lambda ()
                                              (s (+ acc1 acc2) acc1))))])
            (lambda () (cons 0 (lambda () (cons 1 (lambda () (s 1 0))))))))
+
+;; Problem3 : Takes a function f and a stream s, and applies f to the values
+;; of s in succession until f evaluates to #f.
+
+;; The definition of this function is not quite clear. Should I return the
+;; last element of the stream, or a stream which is exactly the same with the
+;; original one but will stop when f evaluates to #f or a new stream where the
+;; elements of it is (f s) and same with the second case, stop when f evaluate
+;; to #f. But by definition, a stream is an infinite sequence of values. Maybe
+;; I should return a list instead. This is very confusing.
+
+;; Returns a list. The ith element of the list is the result of applying f to
+;; the value of s in succession until f evaluates to #f.
+(define (stream-until f s)
+  (let* ([cur (s)]
+        [result (f (car cur))])
+    (if result
+     (cons result (stream-until f (cdr cur)))
+     null)))
