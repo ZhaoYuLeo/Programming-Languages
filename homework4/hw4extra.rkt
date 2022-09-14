@@ -41,7 +41,7 @@
 ;; last element of the stream, or a stream which is exactly the same with the
 ;; original one but will stop when f evaluates to #f or a new stream where the
 ;; elements of it is (f s) and same with the second case, stop when f evaluate
-;; to #f. But by definition, a stream is an infinite sequence of values. Maybe
+;; to #f ? By definition, a stream is an infinite sequence of values. Maybe
 ;; I should return a list instead. This is very confusing.
 
 ;; Returns a list. The ith element of the list is the result of applying f to
