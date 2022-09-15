@@ -89,3 +89,7 @@
                                        [(equal? (car elem) v) elem]
                                        [#t (f (+ n 1))]))))])
     (f 0)))
+
+;; Problem10 : Takes a list xs and a number n and returns a function that takes
+;; one argument v and returns the same thing that (assoc v xs) would return.
+(define (cached-assoc xs n))
