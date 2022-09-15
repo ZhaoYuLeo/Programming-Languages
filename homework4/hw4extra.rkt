@@ -67,3 +67,20 @@
   (let ([cur1 (s1)]
         [cur2 (s2)])
   (lambda () (cons (cons (car cur1) (car cur2)) (stream-zip (cdr cur1) (cdr cur2))))))
+
+;; Problem6 : stream-reverse that is like Racke's reverse function but works on streams
+;; we can not reverse an infinite sequence
+
+;; Problem7 : Takes a list of streams and produces a new stream that takes one
+;; element from each stream in sequence. So it will first produce the first value
+;; of the first stream, then the first value of the second stream and so on, and
+;; it will go back to the first stream when it reaches the end of the list. Try
+;; to do this without ever adding an element to the end of a list.
+(define (interleave streams)
+  (letrec ([f (lambda (streams next-state)
+             (if (null? streams)
+                 (f (reverse next-state) null)
+                 (let* ([s (car streams)]
+                        [value (s)])
+                   (cons (car value) (lambda () (f (cdr streams) (cons (cdr value) next-state)))))))])
+  (lambda () (f streams null))))
