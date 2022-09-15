@@ -58,3 +58,12 @@
 (define (stream-map f s)
   (let ([cur (s)])
     (lambda () (cons (f (car cur)) (stream-map f (cdr cur))))))
+
+;; Problem5 : Takes in two streams s1 and s2 and returns a stream that produces
+;; the pairs that result from the other two streams(so the first value for the
+;; result stream will be the pair of the first value of s1 and the first value
+;; of s2).
+(define (stream-zip s1 s2)
+  (let ([cur1 (s1)]
+        [cur2 (s2)])
+  (lambda () (cons (cons (car cur1) (car cur2)) (stream-zip (cdr cur1) (cdr cur2))))))
