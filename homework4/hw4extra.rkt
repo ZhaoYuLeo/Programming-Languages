@@ -52,3 +52,9 @@
     (if result
      (cons result (stream-until f (cdr cur)))
      null)))
+
+;; Problem4 : Takes a function f and a stream s, and returns a new stream whose
+;; values are the result of applying f to the values produced by S.
+(define (stream-map f s)
+  (let ([cur (s)])
+    (lambda () (cons (f (car cur)) (stream-map f (cdr cur))))))
