@@ -79,8 +79,21 @@
 (define (interleave streams)
   (letrec ([f (lambda (streams next-state)
              (if (null? streams)
-                 (f (reverse next-state) null)
+                 (f (reverse next-state) null); O(n)
                  (let* ([s (car streams)]
                         [value (s)])
                    (cons (car value) (lambda () (f (cdr streams) (cons (cdr value) next-state)))))))])
   (lambda () (f streams null))))
+
+;; Problem8 : takes an integer n and a stream s, and returns a stream that produces
+;; the same values as s but packed in lists of n elements. The first value of the new
+;; stream will be the list consisting of the first n values of s.
+(define (pack n s)
+  (letrec ([first-s s]
+           [f (lambda (n s)
+                (if (= n 0)
+                    (begin (set! first-s s) null); products lists and records s
+                    (let ([value (s)])
+                      (cons (car value) (f (- n 1) (cdr value))))))]
+           [g (lambda () (cons (f n first-s) (lambda () (g))))])
+    (lambda () (g))))
