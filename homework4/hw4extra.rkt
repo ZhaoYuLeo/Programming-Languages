@@ -97,3 +97,26 @@
                       (cons (car value) (f (- n 1) (cdr value))))))]
            [g (lambda () (cons (f n first-s) (lambda () (g))))])
     (lambda () (g))))
+
+;; Problem9 : Takes a number n, starts with n as an initial guess in the stream, and
+;; produces successive guesses applying fn(x) = 1/2(x + n/x) to the current guess.
+;; Newton's Method for approximating the square root of a number, but by producing a
+;; stream of every better approximation.
+(define (sqrt-stream n)
+  (letrec ([f (lambda (x)
+                (let ([cur-guess (/ (+ x (/ n x)) 2.0)])
+                  (cons cur-guess (lambda () (f cur-guess)))))])
+    (lambda () (f n))))
+
+;; Problem10 : Takes two numbers n and e and returns a number x such that x⋅x is within
+;; e of n.
+(define (approx-sqrt n e)
+  (letrec ([float-n (* n 1.0)]
+           [float-e (* e 1.0)]
+           [within-e (lambda (x) (< (abs (- float-n (* x x))) float-e))]
+           [until (lambda (s f)
+                    (let ([value (s)])
+                      (if (f (car value))
+                          (car value)
+                          (until (cdr value) f))))])
+    (until (sqrt-stream n) within-e)))
