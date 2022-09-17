@@ -109,7 +109,7 @@
                         ; there is no need to consume memory to record it.
                         (and new-ans
                              (begin
-                               (vector-set! memo pos (cons v new-ans))
+                               (vector-set! memo pos new-ans)
                                (set! pos (remainder (+ pos 1) n))
                                new-ans))))))))
 
