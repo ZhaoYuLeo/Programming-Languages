@@ -80,6 +80,7 @@
 ;; Problem9 : Takesa value v and a vector vec. Return #f if no vector element is
 ;; a pair with a car field equal to v, else return the first pair with an equal
 ;; car field. Allows vector elements not to be pairs in which case it skips them
+;; takes time proportinal to the pos of v.
 (define (vector-assoc v vec)
   (letrec ([len (vector-length vec)]
            [f (lambda (n) (if (= n len)
@@ -91,5 +92,22 @@
     (f 0)))
 
 ;; Problem10 : Takes a list xs and a number n and returns a function that takes
-;; one argument v and returns the same thing that (assoc v xs) would return.
-(define (cached-assoc xs n))
+;; one argument v and returns the same thing that (assoc v xs) would return. Uses
+;; an n-element cache of recent results with slots used in a round-robin fashion.
+;; Assume n is positive.
+(define (cached-assoc xs n)
+  (let ([memo (make-vector n #f)]
+        [pos 0])
+    ; thanks to closure we can access the same memo without exposing it
+    (lambda (v) (let ([ans (vector-assoc v memo)])
+                  (or ans ; "anything other than false, counts as true"
+                      (let ([new-ans (assoc v xs)])
+                        ; we can never get ans from cache when new-ans is #f
+                        ; why we did not record (cons v new-ans) but just discard it.
+                        ; maybe because this case is rare and usually represents an error
+                        ; there is no need to consume memory to record it.
+                        (and new-ans
+                             (begin
+                               (vector-set! memo pos (cons v new-ans))
+                               (set! pos (remainder (+ pos 1) n))
+                               new-ans))))))))
