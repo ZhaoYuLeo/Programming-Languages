@@ -112,3 +112,15 @@
                                (vector-set! memo pos (cons v new-ans))
                                (set! pos (remainder (+ pos 1) n))
                                new-ans))))))))
+
+;; Problem11 : Define a macro that is used like (while-less e1 do e2)
+;; evaluates e1 exactly once, evaluates e2 at least once and keeps evaluating e2
+;; until and only until the result is not a number less than the result of the
+;; evaluation of e1. Assuming evaluation terminates, the result is #f. If what e1
+;; and e2 produced are not numbers, the macro just fails.
+(define-syntax while-less
+  (syntax-rules (do)
+    [(while-less e1 do e2)
+     (letrec ([result e1]
+              [f (lambda () (if (< e2 result) (f) #t))])
+       (f))]))
