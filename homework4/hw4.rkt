@@ -23,6 +23,7 @@
 ;; raise (error "list-nth-mod: negative number") when the given number is
 ;; negative raise (error "list-nth-mod: empty list") when the given list is
 ;; empty.
+;; takes time proportion to pos(n % len(xs)).
 (define (list-nth-mod xs n)
   (cond [(< n 0) (error "list-nth-mod: negative number")]
         [(null? xs) (error "list-nth-mod: empty list")]
@@ -72,9 +73,11 @@
 (define (cycle-lists xs ys)
   (letrec ([pxs xs]
            [pys ys]
-           [f (lambda (xs ys) (cons (cons (car xs) (car ys)); Assume both non-empty
-                                    (lambda () (f (if (null? (cdr xs)) pxs (cdr xs)); have to know when have gone through the list
-                                                  (if (null? (cdr ys)) pys (cdr ys))))))])
+           [f (lambda (xs ys)
+                (cons (cons (car xs) (car ys)); Assume both non-empty
+                      ; After traversing the list, replace it with the original one
+                      (lambda () (f (if (null? (cdr xs)) pxs (cdr xs)); have to know when have gone through the list
+                                    (if (null? (cdr ys)) pys (cdr ys))))))])
     (lambda () (f xs ys))))
 
 ;; Problem9 : Takesa value v and a vector vec. Return #f if no vector element is
@@ -83,12 +86,13 @@
 ;; takes time proportinal to the pos of v.
 (define (vector-assoc v vec)
   (letrec ([len (vector-length vec)]
-           [f (lambda (n) (if (= n len)
-                               #f
-                               (let ([elem (vector-ref vec n)])
-                                 (cond [(not (pair? elem)) (f (+ n 1))]
-                                       [(equal? (car elem) v) elem]
-                                       [#t (f (+ n 1))]))))])
+           [f (lambda (n)
+                (if (= n len)
+                    #f
+                    (let ([elem (vector-ref vec n)])
+                      (cond [(not (pair? elem)) (f (+ n 1))]
+                            [(equal? (car elem) v) elem]
+                            [#t (f (+ n 1))]))))])
     (f 0)))
 
 ;; Problem10 : Takes a list xs and a number n and returns a function that takes
