@@ -41,11 +41,8 @@
 ;; 5 are negated like (1,2,4,-5,6,7,8,9,-10,11,...).
 (define funny-number-stream
   (letrec ([f (lambda (x)
-                (let* ([a (+ (abs x) 1)]
-                       [n (if (= (remainder a 5) 0)
-                              (- a)
-                              a)])
-                  (cons x (lambda () (f n)))))])
+                (cons (if (= (remainder x 5) 0) (- x) x)
+                      (lambda () (f (+ x 1)))))])
     (lambda () (f 1))))
 
 ;; Problem6 : A stream where the elements of it alternate between the strings
