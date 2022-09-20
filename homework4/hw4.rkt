@@ -48,11 +48,9 @@
 ;; Problem6 : A stream where the elements of it alternate between the strings
 ;; "dan.jpg" and "dog.jpg" (starting with "dan.jpg").
 (define dan-then-dog
-  (letrec ([f (lambda ()
-                (cons "dan.jpg" (lambda () (g))))]
-           [g (lambda ()
-                (cons "dog.jpg" (lambda () (f))))])
-    (lambda () (f))))
+  (letrec ([f (lambda () (cons "dan.jpg" g))]
+           [g (lambda () (cons "dog.jpg" f))])
+    f))
 
 ;; Problem7 : Takes a stream s and returns another stream. If s would produce
 ;; v for its ith element, then (stream-add-zero s) would produce the pair
